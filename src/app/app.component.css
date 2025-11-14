@@ -1,0 +1,39 @@
+header {
+  background-color: #ffffff;
+  padding: 15px 20px;
+  border-bottom: 1px solid #eee;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  display: flex;
+  max-width: 1440px;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  margin: 0 auto 20px auto;
+}
+
+header h1 {
+  margin: 0;
+  font-weight: 400;
+  font-family: Arial, sans-serif;
+}
+
+nav {
+  display: flex;
+  gap: 20px;
+}
+
+nav a {
+  text-decoration: none;
+  color: black;
+  padding: 5px 0;
+  transition: color 0.2s ease-in-out;
+}
+
+button {
+  background-color: rgba(192, 227, 229, 0.363);
+  color: black;
+  border: none;
+  padding: 8px 15px;
+  cursor: pointer;
+  font-family: Arial, sans-serif;
+}

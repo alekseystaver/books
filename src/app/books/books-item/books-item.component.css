@@ -1,0 +1,34 @@
+td {
+  padding: 12px 60px;
+  width: 100px;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 14px;
+  color: #2d3748;
+  vertical-align: middle;
+  align-items: center;
+}
+
+.book-type {
+  color: #4a5568;
+}
+
+.menu-cell {
+  text-align: right;
+}
+
+.menu-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  color: #718096;
+  transition: color 0.2s ease;
+}
+
+.menu-btn:hover {
+  color: #2d3748;
+}
+
+.delete-btn {
+  background-color: #9398a0;
+}
