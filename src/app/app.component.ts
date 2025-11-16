@@ -8,11 +8,10 @@ import { Router } from '@angular/router';
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'books-efficiently';
-
+  
   constructor(private router: Router){}
 
-    public goToBookList() {
+  public goToBookList() {
     this.router.navigate(['/']);
   }
 }

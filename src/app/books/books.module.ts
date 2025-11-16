@@ -5,7 +5,6 @@ import { BooksItemComponent } from './books-item/books-item.component';
 import { FormsModule } from '@angular/forms';
 import { HighlightPipe } from '../pipe/highlight.pipe';
 import { AutofocusDirective } from '../directive/autofocus.directive';
-import { BookCountPageComponent } from './book-count-page/book-count-page.component';
 
 @NgModule({
   declarations: [
@@ -13,7 +12,6 @@ import { BookCountPageComponent } from './book-count-page/book-count-page.compon
     BooksItemComponent,
     HighlightPipe,
     AutofocusDirective,
-    BookCountPageComponent,
   ],
   imports: [
     CommonModule,
