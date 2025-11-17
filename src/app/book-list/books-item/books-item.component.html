@@ -1,15 +1,15 @@
 <tr class="book-item-row">
-    <td class="book-name" [innerHTML]="book.name | highlight:searchText:shouldHighlight:'orange'"></td>
-    <td class="book-type" [innerHTML]="book.type | highlight:searchText:shouldHighlight"></td>
+    <td class="book-name" [innerHTML]="book.name | highlight : (searchText ?? '') : highlightColor"></td>
+    <td class="book-type" [innerHTML]="book.type | highlight:(searchText ?? '')"></td>
     <td>Size: {{ book.size }}</td>
     <td>Date: {{ book.createdAt | date: 'shortDate' }}</td>
     <td>Pages:{{ book.pages }}</td>
     <td class="menu-cell">
         <div class="menu-container">
-            @if(!isMenuOpen) {
+            @if(!isMenuOpen){
                 <button class="menu-btn" (click)="toggleMenu($event)">⋮</button>
             }
-            @if(isMenuOpen){
+            @else{
                 <button class="delete-btn" (click)="onDelete($event)">
                     Delete
                 </button>

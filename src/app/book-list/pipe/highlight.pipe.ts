@@ -9,8 +9,8 @@ export class HighlightPipe implements PipeTransform {
 
   constructor(private sanitizer: DomSanitizer) {}
 
-  transform(value: string, search: string, shouldHighlight: boolean = false, color: string = 'orange'): SafeHtml {
-    if (!search || !shouldHighlight) {
+  transform(value: string, search: string, color: string = 'orange'): SafeHtml {
+    if (!value || !search) {
       return this.sanitizer.bypassSecurityTrustHtml(value);
     }
 

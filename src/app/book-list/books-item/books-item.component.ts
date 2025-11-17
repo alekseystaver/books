@@ -3,16 +3,17 @@ import { Book } from '../../models/book.model';
 
 @Component({
   selector: 'app-books-item',
-  standalone: false,
   templateUrl: './books-item.component.html',
-  styleUrls: ['./books-item.component.css']
+  styleUrls: ['./books-item.component.scss'],
+  standalone: false,
 })
 export class BooksItemComponent {
   @Input() public book!: Book;
-  @Input() public searchText: string = '';
-  @Input() public shouldHighlight: boolean = false;
-  @Output() public delete = new EventEmitter<number>();
-  
+  @Input() public searchText: string | null = '';
+  @Output() public readonly delete = new EventEmitter<number>();
+
+  public readonly highlightColor = 'orange';
+    
   public isMenuOpen: boolean = false;
 
   @HostListener('document:click')

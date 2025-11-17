@@ -5,13 +5,13 @@ import { Router } from '@angular/router';
   selector: 'app-root',
   templateUrl: './app.component.html',
   standalone: false,
-  styleUrl: './app.component.css'
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  
-  constructor(private router: Router){}
 
-  public goToBookList() {
+  constructor(private readonly router: Router) {}
+
+  public goToBookList(): void {
     this.router.navigate(['/']);
   }
 }
