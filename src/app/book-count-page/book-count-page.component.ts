@@ -9,7 +9,7 @@ import { BookService } from '../services/book.service';
   styleUrls: ['./book-count-page.component.scss'],
 })
 export class BookCountPageComponent {
-  public readonly bookCount$!: Observable<number>;
+  protected readonly bookCount$!: Observable<number>;
 
   constructor(private readonly bookService: BookService) {
     this.bookCount$ = this.bookService.getBooksCount();

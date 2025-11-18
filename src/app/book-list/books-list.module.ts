@@ -19,4 +19,4 @@ import { BooksItemModule } from './books-item/books-item.module';
     AutofocusDirective
   ]
 })
-export class BooksModule {}
+export class BooksListModule {}

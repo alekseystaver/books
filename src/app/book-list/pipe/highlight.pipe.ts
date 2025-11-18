@@ -10,10 +10,6 @@ export class HighlightPipe implements PipeTransform {
   constructor(private sanitizer: DomSanitizer) {}
 
   transform(value: string, search: string, color: string = 'orange'): SafeHtml {
-    if (!value || !search) {
-      return this.sanitizer.bypassSecurityTrustHtml(value);
-    }
-
     const highlightedText = value.replace(new RegExp(search, 'gi'), `<mark style="background-color: ${color};">$&</mark>`);
 
     return this.sanitizer.bypassSecurityTrustHtml(highlightedText);

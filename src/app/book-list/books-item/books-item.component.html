@@ -1,6 +1,6 @@
 <tr class="book-item-row">
     <td class="book-name" [innerHTML]="book.name | highlight : (searchText ?? '') : highlightColor"></td>
-    <td class="book-type" [innerHTML]="book.type | highlight:(searchText ?? '')"></td>
+    <td class="book-type" [innerHTML]="book.type | highlight: (searchText ?? '')"></td>
     <td>Size: {{ book.size }}</td>
     <td>Date: {{ book.createdAt | date: 'shortDate' }}</td>
     <td>Pages:{{ book.pages }}</td>

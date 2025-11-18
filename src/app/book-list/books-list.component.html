@@ -17,7 +17,7 @@
         <app-books-item
           [book]="book"
           (delete)="deleteBook($event)"
-          [searchText]="activeSearchTerm$ | async"
+          [searchText]="searchText$ | async"
         ></app-books-item>
       }
     } @else {

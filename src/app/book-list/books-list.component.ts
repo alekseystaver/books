@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
-import { map, distinctUntilChanged, startWith } from 'rxjs/operators';
+import { map, distinctUntilChanged } from 'rxjs/operators';
 import { Book } from '../models/book.model';
 import { BookService } from '../services/book.service';
 
@@ -11,47 +11,46 @@ import { BookService } from '../services/book.service';
   standalone: false,
 })
 export class BooksListComponent implements OnInit {
-  public readonly activeSearchTerm$ = new BehaviorSubject<string>('');
-  
-  public filteredBooks$!: Observable<Book[]>;
+  protected readonly searchText$ = new BehaviorSubject<string>(''); 
 
-  public searchText: string = '';
+  protected filteredBooks$!: Observable<Book[]>;
 
-  constructor(private bookService: BookService) {}
+  constructor(private readonly bookService: BookService) {}
 
   public ngOnInit(): void {
     this.bookService.initializeBooks();
+
     this.filteredBooks$ = combineLatest([
       this.bookService.books$,
-      this.activeSearchTerm$.pipe(
-        distinctUntilChanged(),
-        startWith('')
+      this.searchText$.pipe(
+        distinctUntilChanged()
       )
     ]).pipe(
-      map(([books, term]) => {
-        const trimmedLowerCaseTerm = term.trim().toLowerCase();
-
-        if (!trimmedLowerCaseTerm) {
-          return [...books];
-        }
-        
-        return books.filter(book =>
-          book.name.toLowerCase().includes(trimmedLowerCaseTerm)
-        );
-      })
+      map(([books, term]) => this.filterBooks(books, term))
     );
   }
 
-  public onSearch(term: string): void {
-    this.activeSearchTerm$.next(this.searchText);
-    this.activeSearchTerm$.next(term);
+  protected onSearch(term: string): void {
+    this.searchText$.next(term);
   }
 
-  public createBook(): void {
+  protected createBook(): void {
     this.bookService.addBook();
   }
 
-  public deleteBook(id: number): void {
+  protected deleteBook(id: number): void {
     this.bookService.deleteBook(id);
+  }
+
+  protected filterBooks(books: Book[], term: string): Book[] {
+    const normalizedTerm = term.trim().toLowerCase();
+
+    if (!normalizedTerm) {
+      return books;
+    }
+
+    return books.filter(book =>
+      book.name.toLowerCase().includes(normalizedTerm)
+    );
   }
 }

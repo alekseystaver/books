@@ -10,29 +10,30 @@ import { Book } from '../../models/book.model';
 export class BooksItemComponent {
   @Input() public book!: Book;
   @Input() public searchText: string | null = '';
+
   @Output() public readonly delete = new EventEmitter<number>();
 
-  public readonly highlightColor = 'orange';
+  protected readonly highlightColor = 'orange';
     
-  public isMenuOpen: boolean = false;
+  protected isMenuOpen: boolean = false;
 
   @HostListener('document:click')
-  public closeMenuOnOutsideClick(): void {
+  protected closeMenuOnOutsideClick(): void {
     if (this.isMenuOpen) {
       this.closeMenu();
     }
   }
 
-  public toggleMenu(event: MouseEvent): void {
+  protected toggleMenu(event: MouseEvent): void {
     event.stopPropagation();
     this.isMenuOpen = !this.isMenuOpen;
   }
 
-  public closeMenu(): void {
+  protected closeMenu(): void {
     this.isMenuOpen = false;
   }
 
-  public onDelete(event: MouseEvent): void {
+  protected onDelete(event: MouseEvent): void {
     event.stopPropagation();
     this.delete.emit(this.book.id);
     this.closeMenu();

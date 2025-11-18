@@ -11,7 +11,7 @@ export class AppComponent {
 
   constructor(private readonly router: Router) {}
 
-  public goToBookList(): void {
+  protected goToBookList(): void {
     this.router.navigate(['/']);
   }
 }
