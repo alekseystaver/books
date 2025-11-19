@@ -7,11 +7,12 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class BookService {
+  public readonly books$: Observable<Book[]> = this.books.asObservable();
+
+  private count: number = 1;
+  
   private readonly books = new BehaviorSubject<Book[]>([]);
   private readonly types = Object.values(BookType); 
-  private count: number = 1;
-
-  public readonly books$: Observable<Book[]> = this.books.asObservable();
 
   private createRandomBook(id: number): Book {
     const type = this.types[Math.floor(Math.random() * this.types.length)];
