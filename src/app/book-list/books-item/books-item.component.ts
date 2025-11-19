@@ -14,24 +14,6 @@ export class BooksItemComponent {
   @Output() public readonly delete = new EventEmitter<number>();
 
   protected readonly highlightColor = 'orange';
-    
-  protected isMenuOpen: boolean = false;
-
-  @HostListener('document:click')
-  protected closeMenuOnOutsideClick(): void {
-    if (this.isMenuOpen) {
-      this.closeMenu();
-    }
-  }
-
-  protected toggleMenu(event: MouseEvent): void {
-    event.stopPropagation();
-    this.isMenuOpen = !this.isMenuOpen;
-  }
-
-  protected closeMenu(): void {
-    this.isMenuOpen = false;
-  }
 
   protected onDelete(event: MouseEvent): void {
     event.stopPropagation();
