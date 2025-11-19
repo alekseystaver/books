@@ -15,9 +15,7 @@ export class BookService {
   
   public readonly books$: Observable<Book[]> = this.books.asObservable();
 
-  constructor(private http: HttpClient) {
-    this.loadBooks();
-  }
+  constructor(private http: HttpClient) {}
 
   public loadBooks(): void {
     this.http.get<Book[]>('/assets/data.json').pipe(
