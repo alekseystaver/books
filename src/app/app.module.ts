@@ -4,7 +4,11 @@ import { AppComponent } from './app.component';
 import { BooksListModule } from './book-list/books-list.module';
 import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
-import { BookCountModule } from './book-count-page/book-count.module'; 
+import { BookCountModule } from './book-count-page/book-count.module';
+import { BookPageModule } from './book-page/book-page.module';
+import { BookReaderModule } from './book-reader/book-reader.module';
+import { HttpClientModule } from '@angular/common/http'; 
+
 
 @NgModule({
   declarations: [
@@ -15,7 +19,10 @@ import { BookCountModule } from './book-count-page/book-count.module';
     FormsModule,
     BooksListModule,
     AppRoutingModule,
-    BookCountModule
+    BookCountModule,
+    BookPageModule,
+    BookReaderModule,
+    HttpClientModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,4 +1,5 @@
-import { Component, Input, Output, EventEmitter, HostListener } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Router } from '@angular/router';
 import { Book } from '../../models/book.model';
 
 @Component({
@@ -14,28 +15,15 @@ export class BooksItemComponent {
   @Output() public readonly delete = new EventEmitter<number>();
 
   protected readonly highlightColor = 'orange';
-    
-  protected isMenuOpen: boolean = false;
 
-  @HostListener('document:click')
-  protected closeMenuOnOutsideClick(): void {
-    if (this.isMenuOpen) {
-      this.closeMenu();
-    }
-  }
-
-  protected toggleMenu(event: MouseEvent): void {
-    event.stopPropagation();
-    this.isMenuOpen = !this.isMenuOpen;
-  }
-
-  protected closeMenu(): void {
-    this.isMenuOpen = false;
-  }
+  constructor(private router: Router) {}
 
   protected onDelete(event: MouseEvent): void {
     event.stopPropagation();
     this.delete.emit(this.book.id);
-    this.closeMenu();
+  }
+
+  protected navigateToBook(): void {
+    this.router.navigate(['/books', this.book.id]); 
   }
 }

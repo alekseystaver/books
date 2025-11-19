@@ -1,0 +1,17 @@
+@if (book$ | async; as book) {
+  <header class="page-header">
+    <h1>{{ book.name }}</h1>
+  </header>
+  
+  <main class="page-content">
+    <div class="pages-section">
+      <div class="pages-container">
+        @for (page of [].constructor(book.pages); track $index) {
+          <div class="page-square" (click)="openPage(book.id, $index)">
+            {{ $index + 1 }}
+          </div>
+        }
+      </div>
+    </div>
+  </main>
+}

@@ -1,0 +1,66 @@
+[
+  {
+    "id": 1,
+    "name": "Modern Loft Interior Concepts",
+    "type": "Design Book",
+    "size": "12.5 MB",
+    "createdAt": "2023-11-15T10:00:00.000Z",
+    "pages": 12
+  },
+  {
+    "id": 2,
+    "name": "Kitchen Fixtures & Fittings 2024",
+    "type": "Item Schedule",
+    "size": "450 KB",
+    "createdAt": "2024-01-20T14:30:00.000Z",
+    "pages": 4
+  },
+  {
+    "id": 3,
+    "name": "HVAC System Installation Guide",
+    "type": "Installation Book",
+    "size": "2.1 MB",
+    "createdAt": "2023-12-05T09:15:00.000Z",
+    "pages": 15
+  },
+  {
+    "id": 4,
+    "name": "Minimalist Landscape Architecture",
+    "type": "Design Book",
+    "size": "18.2 MB",
+    "createdAt": "2024-02-12T11:00:00.000Z",
+    "pages": 20
+  },
+  {
+    "id": 5,
+    "name": "Solar Panel Mounting Instructions",
+    "type": "Installation Book",
+    "size": "1.5 MB",
+    "createdAt": "2023-10-25T16:45:00.000Z",
+    "pages": 8
+  },
+  {
+    "id": 6,
+    "name": "Office Furniture Procurement List",
+    "type": "Item Schedule",
+    "size": "120 KB",
+    "createdAt": "2024-03-01T08:20:00.000Z",
+    "pages": 2
+  },
+  {
+    "id": 7,
+    "name": "Smart Home Wiring Diagrams",
+    "type": "Installation Book",
+    "size": "3.4 MB",
+    "createdAt": "2023-09-10T13:10:00.000Z",
+    "pages": 10
+  },
+  {
+    "id": 8,
+    "name": "Scandinavian Color Palettes",
+    "type": "Design Book",
+    "size": "8.7 MB",
+    "createdAt": "2024-01-05T15:50:00.000Z",
+    "pages": 6
+  }
+]
