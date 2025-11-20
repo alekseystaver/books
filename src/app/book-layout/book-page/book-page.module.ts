@@ -1,17 +1,17 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { BookReaderComponent } from './book-reader.component';
+import { BookPageComponent } from './book-page.component';
 import { RouterModule } from '@angular/router';
 
 
 
 @NgModule({
   declarations: [
-    BookReaderComponent
+    BookPageComponent
   ],
   imports: [
     CommonModule,
     RouterModule
   ]
 })
-export class BookReaderModule { }
+export class BookPageModule { }

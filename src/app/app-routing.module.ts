@@ -1,16 +1,20 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { BookCountPageComponent } from './book-count-page/book-count-page.component';
-import { BooksListComponent } from './book-list/books-list.component';
-import { BookPageComponent } from './book-page/book-page.component';
-import { BookReaderComponent } from './book-reader/book-reader.component';
+import { BooksListComponent } from './book-layout/book-list/books-list.component';
+import { BookPagesComponent } from './book-layout/book-pages/book-pages.component';
+import { BookPageComponent } from './book-layout/book-page/book-page.component';
+import { BookLayoutComponent } from './book-layout/book-layout.component';
 
 const routes: Routes = [
-  {path: '', component: BooksListComponent},
-  {path: 'book-count', component: BookCountPageComponent},
-  {path: 'books/:id', component: BookPageComponent},
-  {path: 'books/:id/read/:pageIndex', component: BookReaderComponent},
-  {path: '**', redirectTo: ''},
+  {path: '', component: BookLayoutComponent,
+    children: [
+      {path: '', component: BooksListComponent},
+      {path: 'book-count', component: BookCountPageComponent},
+      {path: 'books/:id/read/:pageIndex', component: BookPageComponent},
+      {path: 'books/:id', component: BookPagesComponent}
+    ]
+  },
 ];
 
 @NgModule({

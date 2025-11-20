@@ -16,7 +16,7 @@ export class BooksItemComponent {
 
   protected readonly highlightColor = 'orange';
 
-  constructor(private router: Router) {}
+  constructor(private readonly router: Router) {}
 
   protected onDelete(event: MouseEvent): void {
     event.stopPropagation();

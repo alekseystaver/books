@@ -1,26 +1,30 @@
-import { Component, ElementRef, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, AfterViewInit, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
-  selector: 'app-book-reader',
-  templateUrl: './book-reader.component.html',
-  styleUrls: ['./book-reader.component.scss'],
+  selector: 'app-book-page',
+  templateUrl: './book-page.component.html',
+  styleUrls: ['./book-page.component.scss'],
   standalone: false
 })
-export class BookReaderComponent implements OnInit, AfterViewInit {
+export class BookPageComponent implements OnInit, AfterViewInit {
 
-  @ViewChild('pageCanvas') private canvasRef!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('pageCanvas') private readonly canvasRef!: ElementRef<HTMLCanvasElement>;
   
   protected bookId!: number;
   protected pageIndex: number = 0;
 
-  constructor(private route: ActivatedRoute, private router: Router) {}
+  constructor(
+    private readonly route: ActivatedRoute, 
+    private readonly router: Router,
+    private readonly destroyRef: DestroyRef  
+  ) {}
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
-      this.bookId = Number(params.get('id'));
-      this.pageIndex = Number(params.get('pageIndex'));
-    });
+    this.route.paramMap.pipe(
+      takeUntilDestroyed(this.destroyRef)
+    )
   }
 
   public ngAfterViewInit(): void {
@@ -63,9 +67,5 @@ export class BookReaderComponent implements OnInit, AfterViewInit {
 
       context.stroke();
     }
-  }
-
-  protected goBack(): void {
-    this.router.navigate(['/books', this.bookId]);
   }
 }

@@ -1,9 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Observable, BehaviorSubject, combineLatest, Subscription } from 'rxjs';
+import { Component, DestroyRef, OnInit } from '@angular/core';
+import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
 import { map, distinctUntilChanged, debounceTime } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
 import { Book } from '../models/book.model';
-import { BookService } from '../services/book.service';
+import { BookService } from '../../services/book.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-books-list',
@@ -11,22 +12,21 @@ import { BookService } from '../services/book.service';
   styleUrls: ['./books-list.component.scss'],
   standalone: false,
 })
-export class BooksListComponent implements OnInit, OnDestroy {
+export class BooksListComponent implements OnInit {
   public searchControl = new FormControl('');
 
   protected readonly searchText$ = new BehaviorSubject<string>(''); 
   protected filteredBooks$!: Observable<Book[]>;
 
-  private subscrintion!: Subscription;
-
-  constructor(private readonly bookService: BookService) {}
+  constructor(private readonly bookService: BookService, private readonly destroyRef: DestroyRef) {}
 
   public ngOnInit(): void {
     this.bookService.loadBooks();
 
-    this.subscrintion = this.searchControl.valueChanges.pipe(
+    this.searchControl.valueChanges.pipe(
       debounceTime(300),
-      distinctUntilChanged()
+      distinctUntilChanged(),
+      takeUntilDestroyed(this.destroyRef)
     ).subscribe(value => {
       this.searchText$.next(value || '');
     });
@@ -37,12 +37,6 @@ export class BooksListComponent implements OnInit, OnDestroy {
     ]).pipe(
       map(([books, term]) => this.filterBooks(books, term))
     );
-  }
-
-  public ngOnDestroy(): void {
-    if(this.subscrintion) {
-      this.subscrintion.unsubscribe()
-    }
   }
 
   protected onSearch(term: string): void {

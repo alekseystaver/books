@@ -1,16 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable, switchMap } from 'rxjs';
 import { Book } from '../models/book.model';
-import { BookService } from '../services/book.service';
+import { BookService } from '../../services/book.service';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
-  selector: 'app-book-page',
+  selector: 'app-book-pages',
   standalone: false,
-  templateUrl: './book-page.component.html',
-  styleUrl: './book-page.component.scss'
+  templateUrl: './book-pages.component.html',
+  styleUrl: './book-pages.component.scss'
 })
-export class BookPageComponent implements OnInit {
+export class BookPagesComponent implements OnInit {
   protected book$!: Observable<Book | undefined>;
 
   constructor(

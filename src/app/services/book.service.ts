@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Book, BookType } from '../models/book.model'; 
+import { Book, BookType } from '../book-layout/models/book.model'; 
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -10,12 +10,10 @@ import { map } from 'rxjs/operators';
 export class BookService {
   private readonly books = new BehaviorSubject<Book[]>([]);
   private readonly types = Object.values(BookType); 
-
-  private count: number = 1;
   
   public readonly books$: Observable<Book[]> = this.books.asObservable();
 
-  constructor(private http: HttpClient) {}
+  constructor(private readonly http: HttpClient) {}
 
   public loadBooks(): void {
     this.http.get<Book[]>('/assets/data.json').pipe(
@@ -26,8 +24,7 @@ export class BookService {
     ).subscribe({
       next: (data) => {
         this.books.next(data);
-      },
-      error: (err) => console.error(err)
+      }
     });
   }
 
@@ -41,19 +38,6 @@ export class BookService {
       createdAt: new Date(),
       pages: Math.floor(Math.random() * 5) + 1
     };
-  }
-
-  public initializeBooks(): void {
-    const currentBooks = this.books.getValue();
-    if (currentBooks.length > 0) {
-      return;
-    }
-
-    const initialBooks: Book[] = [];
-    for (let i = 0; i <= 5; i++) {
-      initialBooks.push(this.createRandomBook(i));
-    }
-    this.books.next(initialBooks);
   }
 
   public addBook(): void {
