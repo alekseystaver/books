@@ -10,11 +10,11 @@ const routes: Routes = [
   {path: '', component: BookLayoutComponent,
     children: [
       {path: '', component: BooksListComponent},
-      {path: 'book-count', component: BookCountPageComponent},
       {path: 'books/:id/read/:pageIndex', component: BookPageComponent},
       {path: 'books/:id', component: BookPagesComponent}
     ]
   },
+  {path: 'book-count', component: BookCountPageComponent},
 ];
 
 @NgModule({
