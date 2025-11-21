@@ -2,29 +2,30 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Book, BookType } from '../book-layout/models/book.model'; 
 import { BehaviorSubject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { finalize, map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BookService {
   private readonly books = new BehaviorSubject<Book[]>([]);
-  private readonly types = Object.values(BookType); 
+  private readonly types = Object.values(BookType);
   
   public readonly books$: Observable<Book[]> = this.books.asObservable();
 
   constructor(private readonly http: HttpClient) {}
 
   public loadBooks(): void {
+    if (this.books.getValue().length > 0) {
+      return;
+    }
     this.http.get<Book[]>('/assets/data.json').pipe(
       map(books => books.map(book => ({
         ...book,
         createdAt: new Date(book.createdAt)
       })))
-    ).subscribe({
-      next: (data) => {
+    ).subscribe(data => {
         this.books.next(data);
-      }
     });
   }
 

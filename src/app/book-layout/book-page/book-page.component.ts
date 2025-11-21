@@ -16,15 +16,16 @@ export class BookPageComponent implements OnInit, AfterViewInit {
   protected pageIndex: number = 0;
 
   constructor(
-    private readonly route: ActivatedRoute, 
-    private readonly router: Router,
-    private readonly destroyRef: DestroyRef  
+    private readonly route: ActivatedRoute,
+    private readonly destroyRef: DestroyRef
   ) {}
 
   ngOnInit(): void {
     this.route.paramMap.pipe(
       takeUntilDestroyed(this.destroyRef)
-    )
+    ).subscribe(params => {
+      this.pageIndex = Number(params.get('pageIndex'));
+    })
   }
 
   public ngAfterViewInit(): void {
