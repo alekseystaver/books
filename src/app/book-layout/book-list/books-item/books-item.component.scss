@@ -16,19 +16,18 @@ td {
   text-align: right;
 }
 
-.menu-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 20px;
-  color: #718096;
-  transition: color 0.2s ease;
+.more {
+  color: #757575;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
 }
 
-.menu-btn:hover {
-  color: #2d3748;
+.matmenu {
+  position: relative;
 }
 
-.delete-btn {
-  background-color: #9398a0;
-}
+
+

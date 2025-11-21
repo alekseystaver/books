@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit } from '@angular/core';
 import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
-import { map, distinctUntilChanged } from 'rxjs/operators';
+import { map, distinctUntilChanged, debounceTime } from 'rxjs/operators';
+import { FormControl } from '@angular/forms';
 import { Book } from '../models/book.model';
-import { BookService } from '../services/book.service';
+import { BookService } from '../../services/book.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-books-list',
@@ -11,20 +13,27 @@ import { BookService } from '../services/book.service';
   standalone: false,
 })
 export class BooksListComponent implements OnInit {
-  protected readonly searchText$ = new BehaviorSubject<string>(''); 
+  public searchControl = new FormControl('');
 
+  protected readonly searchText$ = new BehaviorSubject<string>(''); 
   protected filteredBooks$!: Observable<Book[]>;
 
-  constructor(private readonly bookService: BookService) {}
+  constructor(private readonly bookService: BookService, private readonly destroyRef: DestroyRef) {}
 
   public ngOnInit(): void {
-    this.bookService.initializeBooks();
+    this.bookService.loadBooks();
+
+    this.searchControl.valueChanges.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(value => {
+      this.searchText$.next(value || '');
+    });
 
     this.filteredBooks$ = combineLatest([
       this.bookService.books$,
-      this.searchText$.pipe(
-        distinctUntilChanged()
-      )
+      this.searchText$ 
     ]).pipe(
       map(([books, term]) => this.filterBooks(books, term))
     );

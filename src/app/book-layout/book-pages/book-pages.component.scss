@@ -1,0 +1,55 @@
+.page-header {
+  display: flex;
+  justify-content:space-around;        
+  padding: 1rem 1.5rem;
+  margin-bottom: 1.5rem;
+
+  button {
+    color: #000000;
+    text-decoration: none;
+    background-color: rgba(192, 227, 229, 0.363);
+    border: none;
+    padding: 1rem 1rem;
+  }
+
+  h1 {
+    margin: 0;
+    font-weight: 500;
+  }
+}
+
+.page-content {
+  ul {
+    list-style-type: none;
+    padding: 0;
+    li {
+      margin-bottom: 0.5rem;
+    }
+  }
+    display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 1rem;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.page-square {
+  width: 300px;
+  height: 300px;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2rem;
+  color: #555;
+  cursor: pointer;
+  margin-bottom: 20px;
+  transition: background-color 0.2s, border-color 0.2s;
+
+  &:hover {
+    background-color: rgba(192, 227, 229, 0.363);
+    border-color: rgba(192, 227, 229, 0.774);
+  }
+}
