@@ -11,7 +11,7 @@
   </div>
 
   @let books = filteredBooks$ | async;
-  @if(books && books.length > 0) {
+  @if(books && books?.length) {
     @for(book of books; track book.id) {
       <app-books-item
         [book]="book"
