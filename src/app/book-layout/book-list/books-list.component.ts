@@ -1,16 +1,19 @@
 import { Component, DestroyRef, OnInit } from '@angular/core';
 import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
 import { map, distinctUntilChanged, debounceTime } from 'rxjs/operators';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Book } from '../models/book.model';
 import { BookService } from '../../services/book.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { CommonModule } from '@angular/common';
+import { BooksItemComponent } from './books-item/books-item.component';
+import { AutofocusDirective } from './directive/autofocus.directive';
 
 @Component({
   selector: 'app-books-list',
   templateUrl: './books-list.component.html',
   styleUrls: ['./books-list.component.scss'],
-  standalone: false,
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, BooksItemComponent, AutofocusDirective]
 })
 export class BooksListComponent implements OnInit {
   public searchControl = new FormControl('');

@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { BookService } from '../services/book.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-book-count-page',
-  standalone: false,
+  imports: [CommonModule],
   templateUrl: './book-count-page.component.html',
   styleUrls: ['./book-count-page.component.scss'],
 })

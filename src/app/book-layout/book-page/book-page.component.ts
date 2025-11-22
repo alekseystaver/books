@@ -1,12 +1,13 @@
+import { CommonModule } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild, AfterViewInit, DestroyRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-book-page',
   templateUrl: './book-page.component.html',
   styleUrls: ['./book-page.component.scss'],
-  standalone: false
+  imports: [CommonModule, RouterModule]
 })
 export class BookPageComponent implements OnInit, AfterViewInit {
 

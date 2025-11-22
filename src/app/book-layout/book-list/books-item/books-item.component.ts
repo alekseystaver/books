@@ -1,12 +1,17 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { Book } from '../../models/book.model';
+import { CommonModule } from '@angular/common';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { HighlightPipe } from '../pipe/highlight.pipe';
 
 @Component({
   selector: 'app-books-item',
   templateUrl: './books-item.component.html',
   styleUrls: ['./books-item.component.scss'],
-  standalone: false,
+  imports: [CommonModule, MatMenuModule, MatIconModule, MatButtonModule, HighlightPipe]
 })
 export class BooksItemComponent {
   @Input() public book!: Book;

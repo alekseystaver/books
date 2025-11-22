@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { Observable, switchMap } from 'rxjs';
 import { Book } from '../models/book.model';
 import { BookService } from '../../services/book.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-book-pages',
-  standalone: false,
+  imports: [CommonModule, RouterModule],
   templateUrl: './book-pages.component.html',
   styleUrl: './book-pages.component.scss'
 })
