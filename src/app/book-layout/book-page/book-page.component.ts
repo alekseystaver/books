@@ -1,7 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, OnInit, ViewChild, AfterViewInit, DestroyRef } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, AfterViewInit, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { Store } from '@ngxs/store';
+import { LoadBooks } from '../../store/book.actions';
 
 @Component({
   selector: 'app-book-page',
@@ -10,18 +12,18 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
   imports: [CommonModule, RouterModule]
 })
 export class BookPageComponent implements OnInit, AfterViewInit {
-
   @ViewChild('pageCanvas') private readonly canvasRef!: ElementRef<HTMLCanvasElement>;
+
+  private readonly store = inject(Store);
+  private readonly route = inject(ActivatedRoute);
+  private readonly destroyRef = inject(DestroyRef);
   
   protected bookId!: number;
   protected pageIndex: number = 0;
 
-  constructor(
-    private readonly route: ActivatedRoute,
-    private readonly destroyRef: DestroyRef
-  ) {}
-
   ngOnInit(): void {
+    this.store.dispatch(new LoadBooks());
+
     this.route.paramMap.pipe(
       takeUntilDestroyed(this.destroyRef)
     ).subscribe(params => {

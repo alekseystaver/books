@@ -1,13 +1,15 @@
-import { Component, DestroyRef, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
 import { map, distinctUntilChanged, debounceTime } from 'rxjs/operators';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Book } from '../models/book.model';
-import { BookService } from '../../services/book.service';
+import { Book } from '../../store/book.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { BooksItemComponent } from './books-item/books-item.component';
 import { AutofocusDirective } from './directive/autofocus.directive';
+import { Store } from '@ngxs/store';
+import { AddBook, DeleteBook, LoadBooks } from '../../store/book.actions';
+import { BookState } from '../../store/book.state';
 
 @Component({
   selector: 'app-books-list',
@@ -16,15 +18,16 @@ import { AutofocusDirective } from './directive/autofocus.directive';
   imports: [CommonModule, FormsModule, ReactiveFormsModule, BooksItemComponent, AutofocusDirective]
 })
 export class BooksListComponent implements OnInit {
+  private readonly store = inject(Store);
+  private readonly  destroyRef = inject(DestroyRef)
+
   public searchControl = new FormControl('');
 
   protected readonly searchText$ = new BehaviorSubject<string>(''); 
   protected filteredBooks$!: Observable<Book[]>;
 
-  constructor(private readonly bookService: BookService, private readonly destroyRef: DestroyRef) {}
-
   public ngOnInit(): void {
-    this.bookService.loadBooks();
+    this.store.dispatch(new LoadBooks());
 
     this.searchControl.valueChanges.pipe(
       debounceTime(300),
@@ -35,7 +38,7 @@ export class BooksListComponent implements OnInit {
     });
 
     this.filteredBooks$ = combineLatest([
-      this.bookService.books$,
+      this.store.select(BookState.getBooks),
       this.searchText$ 
     ]).pipe(
       map(([books, term]) => this.filterBooks(books, term))
@@ -47,11 +50,11 @@ export class BooksListComponent implements OnInit {
   }
 
   protected createBook(): void {
-    this.bookService.addBook();
+    this.store.dispatch(new AddBook());
   }
 
   protected deleteBook(id: number): void {
-    this.bookService.deleteBook(id);
+    this.store.dispatch(new DeleteBook(id));
   }
 
   protected filterBooks(books: Book[], term: string): Book[] {

@@ -1,7 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { BookService } from '../services/book.service';
 import { CommonModule } from '@angular/common';
+import { Store } from '@ngxs/store';
+import { BookState } from '../store/book.state';
+import { LoadBooks } from '../store/book.actions';
 
 @Component({
   selector: 'app-book-count-page',
@@ -9,10 +12,12 @@ import { CommonModule } from '@angular/common';
   templateUrl: './book-count-page.component.html',
   styleUrls: ['./book-count-page.component.scss'],
 })
-export class BookCountPageComponent {
-  protected readonly bookCount$!: Observable<number>;
+export class BookCountPageComponent implements OnInit{
+  private readonly store = inject(Store);
 
-  constructor(private readonly bookService: BookService) {
-    this.bookCount$ = this.bookService.getBooksCount();
+  protected readonly bookCount$: Observable<number> =this.store.select(BookState.getBooksCount);
+
+  ngOnInit(): void {
+    this.store.dispatch(new LoadBooks());
   }
 }
