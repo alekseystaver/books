@@ -1,9 +1,9 @@
 <tr class="book-item-row" (click)="navigateToBook()">
-    <td class="book-name" [innerHTML]="book.name | highlight : (searchText ?? '') : highlightColor"></td>
-    <td class="book-type" [innerHTML]="book.type | highlight : (searchText ?? '')"></td>
-    <td>Size: {{ book.size }}</td>
-    <td>Date: {{ book.createdAt | date: 'shortDate' }}</td>
-    <td>Pages:{{ book.pages }}</td>
+    <td class="book-name" [innerHTML]="book().name | highlight : (searchText() ?? '') : highlightColor"></td>
+    <td class="book-type" [innerHTML]="book().type | highlight : (searchText() ?? '')"></td>
+    <td>Size: {{ book().size }}</td>
+    <td>Date: {{ book().createdAt | date: 'shortDate' }}</td>
+    <td>Pages:{{ book().pages }}</td>
     <td class="menu-cell">
 
         <button mat-icon-button class = "more" [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()">

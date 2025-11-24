@@ -1,11 +1,10 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { map, Observable, switchMap } from 'rxjs';
-import { Book } from '../../store/book.model';
+import { Component, computed, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngxs/store';
 import { LoadBooks } from '../../store/book.actions';
 import { BookSelectors } from '../../store/book.selectors';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-book-pages',
@@ -17,20 +16,18 @@ export class BookPagesComponent implements OnInit {
   private readonly store = inject(Store);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly params = toSignal(this.route.paramMap);
+  private readonly id = computed(() => Number(this.params()?.get('id') ?? 0));
+  private readonly selectorFn = this.store.selectSignal(BookSelectors.getBookId);
 
-  protected book$!: Observable<Book | undefined>;
+  protected book = computed(() => {
+    const currentId = this.id();
+    const findBook = this.selectorFn();
+    return findBook(currentId);
+  })
 
   public ngOnInit(): void {
     this.store.dispatch(new LoadBooks());
-
-    this.book$ = this.route.paramMap.pipe(
-      switchMap(params => {
-        const id = Number(params.get('id'));
-        return this.store.select(BookSelectors.getBookId).pipe(
-          map(findFn => findFn(id))
-        );
-      })
-    );
   }
 
   protected openPage(bookId: number, pageIndex: number): void {

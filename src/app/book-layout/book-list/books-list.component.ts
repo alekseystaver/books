@@ -1,9 +1,9 @@
-import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { Component, computed, DestroyRef, inject, OnInit, Signal, signal } from '@angular/core';
 import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
-import { map, distinctUntilChanged, debounceTime } from 'rxjs/operators';
+import { map, distinctUntilChanged, debounceTime, count } from 'rxjs/operators';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Book } from '../../store/book.model';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { BooksItemComponent } from './books-item/books-item.component';
 import { AutofocusDirective } from './directive/autofocus.directive';
@@ -19,34 +19,26 @@ import { BookSelectors } from '../../store/book.selectors';
 })
 export class BooksListComponent implements OnInit {
   private readonly store = inject(Store);
-  private readonly  destroyRef = inject(DestroyRef)
+  private readonly books = this.store.selectSignal(BookSelectors.getBooks);
 
   public searchControl = new FormControl('');
 
-  protected readonly searchText$ = new BehaviorSubject<string>(''); 
-  protected filteredBooks$!: Observable<Book[]>;
+  protected readonly searchText = toSignal(
+    this.searchControl.valueChanges.pipe(
+      debounceTime(300),
+      distinctUntilChanged()
+    ), 
+    { initialValue: ''}
+  ); 
+
+  protected filteredBooks = computed(() => {
+    const books = this.books();
+    const term = this.searchText() ?? '';
+    return this.filterBooks(books, term);
+  });
 
   public ngOnInit(): void {
     this.store.dispatch(new LoadBooks());
-
-    this.searchControl.valueChanges.pipe(
-      debounceTime(300),
-      distinctUntilChanged(),
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe(value => {
-      this.searchText$.next(value || '');
-    });
-
-    this.filteredBooks$ = combineLatest([
-      this.store.select(BookSelectors.getBooks),
-      this.searchText$ 
-    ]).pipe(
-      map(([books, term]) => this.filterBooks(books, term))
-    );
-  }
-
-  protected onSearch(term: string): void {
-    this.searchText$.next(term);
   }
 
   protected createBook(): void {

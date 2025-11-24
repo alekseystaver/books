@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { Router } from '@angular/router';
 import { Book } from '../../../store/book.model';
 import { CommonModule } from '@angular/common';
@@ -14,10 +14,10 @@ import { HighlightPipe } from '../pipe/highlight.pipe';
   imports: [CommonModule, MatMenuModule, MatIconModule, MatButtonModule, HighlightPipe]
 })
 export class BooksItemComponent {
-  @Input() public book!: Book;
-  @Input() public searchText: string | null = '';
+  public book = input.required<Book>();
+  public searchText= input<string>();
 
-  @Output() public readonly delete = new EventEmitter<number>();
+  public readonly delete = output<number>();
 
   protected readonly highlightColor = 'orange';
 
@@ -25,10 +25,10 @@ export class BooksItemComponent {
 
   protected onDelete(event: MouseEvent): void {
     event.stopPropagation();
-    this.delete.emit(this.book.id);
+    this.delete.emit(this.book().id);
   }
 
   protected navigateToBook(): void {
-    this.router.navigate(['/books', this.book.id]); 
+    this.router.navigate(['/books', this.book().id]); 
   }
 }

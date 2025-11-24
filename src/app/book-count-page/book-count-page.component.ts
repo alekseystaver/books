@@ -1,6 +1,4 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { BookService } from '../services/book.service';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngxs/store';
 import { LoadBooks } from '../store/book.actions';
@@ -15,7 +13,7 @@ import { BookSelectors } from '../store/book.selectors';
 export class BookCountPageComponent implements OnInit{
   private readonly store = inject(Store);
 
-  protected readonly bookCount$: Observable<number> =this.store.select(BookSelectors.getBooksCount);
+  protected readonly bookCount = this.store.selectSignal(BookSelectors.getBooksCount);
 
   ngOnInit(): void {
     this.store.dispatch(new LoadBooks());

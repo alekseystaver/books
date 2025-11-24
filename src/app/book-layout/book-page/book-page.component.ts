@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, OnInit, ViewChild, AfterViewInit, DestroyRef, inject } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { Component, ElementRef, OnInit, AfterViewInit, inject, computed, viewChild } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { LoadBooks } from '../../store/book.actions';
 
@@ -12,23 +12,18 @@ import { LoadBooks } from '../../store/book.actions';
   imports: [CommonModule, RouterModule]
 })
 export class BookPageComponent implements OnInit, AfterViewInit {
-  @ViewChild('pageCanvas') private readonly canvasRef!: ElementRef<HTMLCanvasElement>;
+  private readonly canvasRef = viewChild.required<ElementRef<HTMLCanvasElement>>('pageCanvas');
 
   private readonly store = inject(Store);
   private readonly route = inject(ActivatedRoute);
-  private readonly destroyRef = inject(DestroyRef);
   
-  protected bookId!: number;
-  protected pageIndex: number = 0;
+  private readonly params = toSignal(this.route.paramMap);
+  
+  protected bookId = computed(() => Number(this.params()?.get('id') ?? 0));
+  protected pageIndex = computed(() => Number(this.params()?.get('pageIndex') ?? 0));
 
   ngOnInit(): void {
     this.store.dispatch(new LoadBooks());
-
-    this.route.paramMap.pipe(
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe(params => {
-      this.pageIndex = Number(params.get('pageIndex'));
-    })
   }
 
   public ngAfterViewInit(): void {
@@ -36,12 +31,12 @@ export class BookPageComponent implements OnInit, AfterViewInit {
   }
 
   private drawPageLines(): void {
-    if (!this.canvasRef || !this.canvasRef.nativeElement) {
+    if (!this.canvasRef()|| !this.canvasRef().nativeElement) {
       console.error('Canvas element not found!');
       return;
     }
 
-    const canvas = this.canvasRef.nativeElement;
+    const canvas = this.canvasRef().nativeElement;
     const context = canvas.getContext('2d'); 
 
     if (context) {

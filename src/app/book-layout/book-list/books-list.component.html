@@ -10,13 +10,13 @@
     <button class="create-btn" (click)="createBook()">Create New Book</button>
   </div>
 
-  @let books = filteredBooks$ | async;
+  @let books = filteredBooks();
   @if(books && books?.length) {
     @for(book of books; track book.id) {
       <app-books-item
         [book]="book"
         (delete)="deleteBook($event)"
-        [searchText]="searchText$ | async"
+        [searchText]="searchText() ?? ''"
       ></app-books-item>
     }
   }
