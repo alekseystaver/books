@@ -9,7 +9,7 @@ import { BooksItemComponent } from './books-item/books-item.component';
 import { AutofocusDirective } from './directive/autofocus.directive';
 import { Store } from '@ngxs/store';
 import { AddBook, DeleteBook, LoadBooks } from '../../store/book.actions';
-import { BookState } from '../../store/book.state';
+import { BookSelectors } from '../../store/book.selectors';
 
 @Component({
   selector: 'app-books-list',
@@ -38,7 +38,7 @@ export class BooksListComponent implements OnInit {
     });
 
     this.filteredBooks$ = combineLatest([
-      this.store.select(BookState.getBooks),
+      this.store.select(BookSelectors.getBooks),
       this.searchText$ 
     ]).pipe(
       map(([books, term]) => this.filterBooks(books, term))

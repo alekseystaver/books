@@ -1,6 +1,6 @@
 import { inject, Injectable } from "@angular/core";
 import { Book } from "./book.model";
-import {Action, Selector, State, StateContext} from '@ngxs/store'
+import {Action, State, StateContext} from '@ngxs/store'
 import { BookService } from "../services/book.service";
 import { AddBook, DeleteBook, LoadBooks } from "./book.actions";
 import { Observable, tap } from "rxjs";
@@ -21,26 +21,6 @@ export interface BookStateModel {
 export class BookState {
 
     private readonly bookService = inject(BookService);
-
-    @Selector() 
-    public static getBooks(state: BookStateModel) {
-        return state.books;
-    }
-
-    @Selector()
-    public static getBooksCount(state: BookStateModel) {
-        return state.books.length;
-    }
-
-    @Selector() 
-    public static isLoading(state: BookStateModel) {
-        return state.loading;
-    }
-
-    @Selector() 
-    public static getBookId(state: BookStateModel) {
-        return (id: number) => state.books.find(book => book.id === id);
-    }
 
     @Action(LoadBooks)
     public loadBooks(ctx: StateContext<BookStateModel>): Observable<Book[]> | void {

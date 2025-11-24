@@ -1,12 +1,11 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { map, Observable, switchMap } from 'rxjs';
 import { Book } from '../../store/book.model';
-import { BookService } from '../../services/book.service';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngxs/store';
 import { LoadBooks } from '../../store/book.actions';
-import { BookState } from '../../store/book.state';
+import { BookSelectors } from '../../store/book.selectors';
 
 @Component({
   selector: 'app-book-pages',
@@ -27,7 +26,7 @@ export class BookPagesComponent implements OnInit {
     this.book$ = this.route.paramMap.pipe(
       switchMap(params => {
         const id = Number(params.get('id'));
-        return this.store.select(BookState.getBookId).pipe(
+        return this.store.select(BookSelectors.getBookId).pipe(
           map(findFn => findFn(id))
         );
       })
