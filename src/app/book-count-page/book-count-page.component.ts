@@ -6,7 +6,6 @@ import { BookSelectors } from '../store/book.selectors';
 
 @Component({
   selector: 'app-book-count-page',
-  imports: [CommonModule],
   templateUrl: './book-count-page.component.html',
   styleUrls: ['./book-count-page.component.scss'],
 })

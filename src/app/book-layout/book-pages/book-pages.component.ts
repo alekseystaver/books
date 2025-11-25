@@ -8,7 +8,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-book-pages',
-  imports: [CommonModule, RouterModule],
+  imports: [RouterModule],
   templateUrl: './book-pages.component.html',
   styleUrl: './book-pages.component.scss'
 })

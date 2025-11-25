@@ -1,9 +1,8 @@
 import { Component, computed, DestroyRef, inject, OnInit, Signal, signal } from '@angular/core';
-import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
-import { map, distinctUntilChanged, debounceTime, count } from 'rxjs/operators';
+import { distinctUntilChanged, debounceTime } from 'rxjs/operators';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Book } from '../../store/book.model';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { BooksItemComponent } from './books-item/books-item.component';
 import { AutofocusDirective } from './directive/autofocus.directive';
@@ -15,7 +14,7 @@ import { BookSelectors } from '../../store/book.selectors';
   selector: 'app-books-list',
   templateUrl: './books-list.component.html',
   styleUrls: ['./books-list.component.scss'],
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, BooksItemComponent, AutofocusDirective]
+  imports: [ ReactiveFormsModule, BooksItemComponent, AutofocusDirective]
 })
 export class BooksListComponent implements OnInit {
   private readonly store = inject(Store);
