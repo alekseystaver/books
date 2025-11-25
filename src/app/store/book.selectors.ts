@@ -1,14 +1,15 @@
 import { Selector } from "@ngxs/store";
-import { BookState, BookStateModel } from "./book.state";
+import { BookState } from "./book.state";
+import { BookStateModel } from "./book-state.model";
 
 export class BookSelectors {
     @Selector([BookState]) 
-    public static getBooks(state: BookStateModel) {
+    public static books(state: BookStateModel) {
         return state.books;
     }
 
     @Selector([BookState])
-    public static getBooksCount(state: BookStateModel) {
+    public static booksCount(state: BookStateModel) {
         return state.books.length;
     }
 
@@ -18,7 +19,7 @@ export class BookSelectors {
     }
 
     @Selector([BookState]) 
-    public static getBookId(state: BookStateModel) {
+    public static bookId(state: BookStateModel) {
         return (id: number) => state.books.find(book => book.id === id);
     }
 }

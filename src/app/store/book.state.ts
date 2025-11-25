@@ -1,14 +1,10 @@
 import { inject, Injectable } from "@angular/core";
-import { Book } from "./book.model";
+import { Book, BookStateModel } from "./book-state.model";
 import {Action, State, StateContext} from '@ngxs/store'
 import { BookService } from "../services/book.service";
 import { AddBook, DeleteBook, LoadBooks } from "./book.actions";
 import { Observable, tap } from "rxjs";
-
-export interface BookStateModel {
-    books: Book[];
-    loading: boolean;
-}
+import { append, patch } from "@ngxs/store/operators";
 
 @State<BookStateModel>({
     name: 'bookState',
@@ -23,17 +19,17 @@ export class BookState {
     private readonly bookService = inject(BookService);
 
     @Action(LoadBooks)
-    public loadBooks(ctx: StateContext<BookStateModel>): Observable<Book[]> | void {
-        const state = ctx.getState();
+    public loadBooks({ getState, patchState } : StateContext<BookStateModel>): Observable<Book[]> | void {
+        const state = getState();
 
-        if (state.books.length > 0) {
+        if (state.books.length) {
           return;
         }
 
-        ctx.patchState({ loading: true });
+        patchState({ loading: true });
         return this.bookService.fetchBooks().pipe(
             tap(result =>{
-                ctx.patchState({
+                patchState({
                     books: result,
                     loading: false
                 })
@@ -42,20 +38,21 @@ export class BookState {
     }
 
     @Action(AddBook)
-    public addBook(ctx: StateContext<BookStateModel>) {
+    public addBook({ setState } : StateContext<BookStateModel>) {
         const newBook = this.bookService.createRandomBook(Date.now());
-        const state = ctx.getState();
-        ctx.patchState({
-            books: [...state.books, newBook]
-        });
+        setState(
+            patch({
+                books: append([newBook])
+            })
+        )
     }
 
     @Action(DeleteBook)
-    public deleteBook(ctx: StateContext<BookStateModel>, action: DeleteBook) {
-        const state = ctx.getState();
+    public deleteBook({ getState, patchState } : StateContext<BookStateModel>, action: DeleteBook) {
+        const state = getState();
         const filteredBooks = state.books.filter(book => book.id !== action.id);
 
-        ctx.patchState({
+        patchState({
             books: filteredBooks
         })
     }

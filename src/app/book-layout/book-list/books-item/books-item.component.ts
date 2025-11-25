@@ -1,6 +1,6 @@
 import { Component, input, output } from '@angular/core';
 import { Router } from '@angular/router';
-import { Book } from '../../../store/book.model';
+import { Book } from '../../../store/book-state.model';
 import { CommonModule } from '@angular/common';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';

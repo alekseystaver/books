@@ -7,6 +7,6 @@ export class AddBook {
 }
 
 export class DeleteBook {
-    public static readonly type = '[BookList] Delete Books'
+    public static readonly type = '[BookList] Delete Book'
     constructor(public id: number) {} 
 }

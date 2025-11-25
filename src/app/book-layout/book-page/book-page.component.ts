@@ -11,7 +11,7 @@ import { LoadBooks } from '../../store/book.actions';
   styleUrls: ['./book-page.component.scss'],
   imports: [CommonModule, RouterModule]
 })
-export class BookPageComponent implements OnInit, AfterViewInit {
+export class BookPageComponent implements AfterViewInit {
   private readonly canvasRef = viewChild.required<ElementRef<HTMLCanvasElement>>('pageCanvas');
 
   private readonly store = inject(Store);
@@ -21,10 +21,6 @@ export class BookPageComponent implements OnInit, AfterViewInit {
   
   protected bookId = computed(() => Number(this.params()?.get('id') ?? 0));
   protected pageIndex = computed(() => Number(this.params()?.get('pageIndex') ?? 0));
-
-  ngOnInit(): void {
-    this.store.dispatch(new LoadBooks());
-  }
 
   public ngAfterViewInit(): void {
     this.drawPageLines();

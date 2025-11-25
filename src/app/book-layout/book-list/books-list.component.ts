@@ -1,7 +1,7 @@
 import { Component, computed, DestroyRef, inject, OnInit, Signal, signal } from '@angular/core';
 import { distinctUntilChanged, debounceTime } from 'rxjs/operators';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Book } from '../../store/book.model';
+import { Book } from '../../store/book-state.model';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { BooksItemComponent } from './books-item/books-item.component';
@@ -16,9 +16,9 @@ import { BookSelectors } from '../../store/book.selectors';
   styleUrls: ['./books-list.component.scss'],
   imports: [ ReactiveFormsModule, BooksItemComponent, AutofocusDirective]
 })
-export class BooksListComponent implements OnInit {
+export class BooksListComponent{
   private readonly store = inject(Store);
-  private readonly books = this.store.selectSignal(BookSelectors.getBooks);
+  private readonly books = this.store.selectSignal(BookSelectors.books);
 
   public searchControl = new FormControl('');
 
@@ -35,10 +35,6 @@ export class BooksListComponent implements OnInit {
     const term = this.searchText() ?? '';
     return this.filterBooks(books, term);
   });
-
-  public ngOnInit(): void {
-    this.store.dispatch(new LoadBooks());
-  }
 
   protected createBook(): void {
     this.store.dispatch(new AddBook());
