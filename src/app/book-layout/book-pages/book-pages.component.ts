@@ -1,8 +1,9 @@
-import { Component, computed, inject, OnInit } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { BookSelectors } from '../../store/book.selectors';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { map, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-book-pages',
@@ -14,15 +15,13 @@ export class BookPagesComponent {
   private readonly store = inject(Store);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
-  private readonly params = toSignal(this.route.paramMap);
-  private readonly id = computed(() => Number(this.params()?.get('id') ?? 0));
-  private readonly selectorFn = this.store.selectSignal(BookSelectors.bookId);
 
-  protected book = computed(() => {
-    const currentId = this.id();
-    const findBook = this.selectorFn();
-    return findBook(currentId);
-  })
+  protected readonly book = toSignal(
+    this.route.paramMap.pipe(
+      map(params => Number(params.get('id') ?? 0)),
+      switchMap(id => this.store.select(BookSelectors.bookId(id)))
+    )
+  );
 
   protected openPage(bookId: number, pageIndex: number): void {
     this.router.navigate(['/books', bookId, 'read', pageIndex]);

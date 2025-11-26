@@ -1,14 +1,13 @@
-import { Component, computed, DestroyRef, inject, OnInit, Signal, signal } from '@angular/core';
-import { distinctUntilChanged, debounceTime } from 'rxjs/operators';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Book } from '../../store/book-state.model';
+import { Component, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { CommonModule } from '@angular/common';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { Store } from '@ngxs/store';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { Book } from '../../store/book-state.model';
+import { AddBook, DeleteBook } from '../../store/book.actions';
+import { BookSelectors } from '../../store/book.selectors';
 import { BooksItemComponent } from './books-item/books-item.component';
 import { AutofocusDirective } from './directive/autofocus.directive';
-import { Store } from '@ngxs/store';
-import { AddBook, DeleteBook, LoadBooks } from '../../store/book.actions';
-import { BookSelectors } from '../../store/book.selectors';
 
 @Component({
   selector: 'app-books-list',
@@ -20,7 +19,7 @@ export class BooksListComponent{
   private readonly store = inject(Store);
   private readonly books = this.store.selectSignal(BookSelectors.books);
 
-  public searchControl = new FormControl('');
+  public searchControl = new FormControl('', {nonNullable: true});
 
   protected readonly searchText = toSignal(
     this.searchControl.valueChanges.pipe(
@@ -31,9 +30,7 @@ export class BooksListComponent{
   ); 
 
   protected filteredBooks = computed(() => {
-    const books = this.books();
-    const term = this.searchText() ?? '';
-    return this.filterBooks(books, term);
+    return this.filterBooks(this.books(), this.searchText() ?? '');
   });
 
   protected createBook(): void {
@@ -44,15 +41,15 @@ export class BooksListComponent{
     this.store.dispatch(new DeleteBook(id));
   }
 
-  protected filterBooks(books: Book[], term: string): Book[] {
-    const normalizedTerm = term.trim().toLowerCase();
+  protected filterBooks(books: Book[], searchValue: string): Book[] {
+    const normalizedSearchValue = searchValue.trim().toLowerCase();
 
-    if (!normalizedTerm) {
+    if (!normalizedSearchValue) {
       return books;
     }
 
     return books.filter(book =>
-      book.name.toLowerCase().includes(normalizedTerm)
+      book.name.toLowerCase().includes(normalizedSearchValue)
     );
   }
 }

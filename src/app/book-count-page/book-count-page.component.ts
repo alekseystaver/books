@@ -1,5 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, inject } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { BookSelectors } from '../store/book.selectors';
 

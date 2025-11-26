@@ -1,10 +1,10 @@
+import { CommonModule } from '@angular/common';
 import { Component, input, output } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
 import { Router } from '@angular/router';
 import { Book } from '../../../store/book-state.model';
-import { CommonModule } from '@angular/common';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
 import { HighlightPipe } from '../pipe/highlight.pipe';
 
 @Component({
@@ -14,8 +14,8 @@ import { HighlightPipe } from '../pipe/highlight.pipe';
   imports: [CommonModule, MatMenuModule, MatIconModule, MatButtonModule, HighlightPipe]
 })
 export class BooksItemComponent {
-  public book = input.required<Book>();
-  public searchText= input<string>();
+  public readonly book = input.required<Book>();
+  public readonly searchText= input<string>();
 
   public readonly delete = output<number>();
 
@@ -23,8 +23,7 @@ export class BooksItemComponent {
 
   constructor(private readonly router: Router) {}
 
-  protected onDelete(event: MouseEvent): void {
-    event.stopPropagation();
+  protected onDelete(): void {
     this.delete.emit(this.book().id);
   }
 

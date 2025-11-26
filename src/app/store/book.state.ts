@@ -20,9 +20,8 @@ export class BookState {
 
     @Action(LoadBooks)
     public loadBooks({ getState, patchState } : StateContext<BookStateModel>): Observable<Book[]> | void {
-        const state = getState();
 
-        if (state.books.length) {
+        if (getState().books.length) {
           return;
         }
 
@@ -49,8 +48,7 @@ export class BookState {
 
     @Action(DeleteBook)
     public deleteBook({ getState, patchState } : StateContext<BookStateModel>, action: DeleteBook) {
-        const state = getState();
-        const filteredBooks = state.books.filter(book => book.id !== action.id);
+        const filteredBooks = getState().books.filter(book => book.id !== action.id);
 
         patchState({
             books: filteredBooks

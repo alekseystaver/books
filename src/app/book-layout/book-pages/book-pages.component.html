@@ -1,13 +1,12 @@
-@let b = book();
-@if (b) {
+@if (book(); as book) {
   <header class="page-header">
     <button routerLink="" class="link-back">All books</button>
-    <h1>{{ b.name }}</h1>
+    <h1>{{ book.name }}</h1>
   </header>
   
   <main class="page-content">
-    @for (page of [].constructor(b.pages); track $index) {
-      <div class="page-square" (click)="openPage(b.id, $index+1)">
+    @for (page of [].constructor(book.pages); track $index) {
+      <div class="page-square" (click)="openPage(book.id, $index+1)">
         {{ $index + 1 }}
       </div>
     }

@@ -1,9 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, OnInit, AfterViewInit, inject, computed, viewChild } from '@angular/core';
+import { AfterViewInit, Component, computed, ElementRef, inject, viewChild } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { Store } from '@ngxs/store';
-import { LoadBooks } from '../../store/book.actions';
 
 @Component({
   selector: 'app-book-page',
@@ -14,12 +12,10 @@ import { LoadBooks } from '../../store/book.actions';
 export class BookPageComponent implements AfterViewInit {
   private readonly canvasRef = viewChild.required<ElementRef<HTMLCanvasElement>>('pageCanvas');
 
-  private readonly store = inject(Store);
   private readonly route = inject(ActivatedRoute);
   
   private readonly params = toSignal(this.route.paramMap);
   
-  protected bookId = computed(() => Number(this.params()?.get('id') ?? 0));
   protected pageIndex = computed(() => Number(this.params()?.get('pageIndex') ?? 0));
 
   public ngAfterViewInit(): void {
@@ -27,8 +23,7 @@ export class BookPageComponent implements AfterViewInit {
   }
 
   private drawPageLines(): void {
-    if (!this.canvasRef()|| !this.canvasRef().nativeElement) {
-      console.error('Canvas element not found!');
+    if (!this.canvasRef().nativeElement) {
       return;
     }
 
