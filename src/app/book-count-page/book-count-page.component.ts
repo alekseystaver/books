@@ -1,17 +1,14 @@
-import { Component } from '@angular/core';
-import { Observable } from 'rxjs';
-import { BookService } from '../services/book.service';
+import { Component, inject } from '@angular/core';
+import { Store } from '@ngxs/store';
+import { BookSelectors } from '../store/book.selectors';
 
 @Component({
   selector: 'app-book-count-page',
-  standalone: false,
   templateUrl: './book-count-page.component.html',
   styleUrls: ['./book-count-page.component.scss'],
 })
-export class BookCountPageComponent {
-  protected readonly bookCount$!: Observable<number>;
+export class BookCountPageComponent{
+  private readonly store = inject(Store);
 
-  constructor(private readonly bookService: BookService) {
-    this.bookCount$ = this.bookService.getBooksCount();
-  }
+  protected readonly bookCount = this.store.selectSignal(BookSelectors.booksCount);
 }

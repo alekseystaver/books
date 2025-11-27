@@ -1,65 +1,56 @@
-import { Component, DestroyRef, OnInit } from '@angular/core';
-import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
-import { map, distinctUntilChanged, debounceTime } from 'rxjs/operators';
-import { FormControl } from '@angular/forms';
-import { Book } from '../models/book.model';
-import { BookService } from '../../services/book.service';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Component, computed, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { Store } from '@ngxs/store';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { Book } from '../../store/book-state.model';
+import { AddBook, DeleteBook } from '../../store/book.actions';
+import { BookSelectors } from '../../store/book.selectors';
+import { BooksItemComponent } from './books-item/books-item.component';
+import { AutofocusDirective } from './directive/autofocus.directive';
 
 @Component({
   selector: 'app-books-list',
   templateUrl: './books-list.component.html',
   styleUrls: ['./books-list.component.scss'],
-  standalone: false,
+  imports: [ ReactiveFormsModule, BooksItemComponent, AutofocusDirective]
 })
-export class BooksListComponent implements OnInit {
-  public searchControl = new FormControl('');
+export class BooksListComponent{
+  private readonly store = inject(Store);
+  private readonly books = this.store.selectSignal(BookSelectors.books);
 
-  protected readonly searchText$ = new BehaviorSubject<string>(''); 
-  protected filteredBooks$!: Observable<Book[]>;
+  public searchControl = new FormControl('', {nonNullable: true});
 
-  constructor(private readonly bookService: BookService, private readonly destroyRef: DestroyRef) {}
-
-  public ngOnInit(): void {
-    this.bookService.loadBooks();
-
+  protected readonly searchText = toSignal(
     this.searchControl.valueChanges.pipe(
       debounceTime(300),
-      distinctUntilChanged(),
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe(value => {
-      this.searchText$.next(value || '');
-    });
+      distinctUntilChanged()
+    ), 
+    { initialValue: ''}
+  ); 
 
-    this.filteredBooks$ = combineLatest([
-      this.bookService.books$,
-      this.searchText$ 
-    ]).pipe(
-      map(([books, term]) => this.filterBooks(books, term))
-    );
-  }
-
-  protected onSearch(term: string): void {
-    this.searchText$.next(term);
-  }
+  protected filteredBooks = computed(() => {
+    return this.filterBooks(this.books(), this.searchText());
+  });
 
   protected createBook(): void {
-    this.bookService.addBook();
+    this.store.dispatch(new AddBook());
   }
 
   protected deleteBook(id: number): void {
-    this.bookService.deleteBook(id);
+    this.store.dispatch(new DeleteBook(id));
   }
 
-  protected filterBooks(books: Book[], term: string): Book[] {
-    const normalizedTerm = term.trim().toLowerCase();
-
-    if (!normalizedTerm) {
+  protected filterBooks(books: Book[], searchValue: string): Book[] {
+    if (!searchValue) {
       return books;
     }
 
+    const normalizedSearchValue = searchValue.trim().toLowerCase();
+
     return books.filter(book =>
-      book.name.toLowerCase().includes(normalizedTerm)
+      book.name.toLowerCase().includes(normalizedSearchValue) ||
+      book.type.toLowerCase().includes(normalizedSearchValue)
     );
   }
 }

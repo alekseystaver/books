@@ -1,32 +1,27 @@
-import { Component, OnInit } from '@angular/core';
-import { Observable, switchMap } from 'rxjs';
-import { Book } from '../models/book.model';
-import { BookService } from '../../services/book.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, computed, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { Store } from '@ngxs/store';
+import { BookSelectors } from '../../store/book.selectors';
+import { map, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-book-pages',
-  standalone: false,
+  imports: [RouterModule],
   templateUrl: './book-pages.component.html',
   styleUrl: './book-pages.component.scss'
 })
-export class BookPagesComponent implements OnInit {
-  protected book$!: Observable<Book | undefined>;
+export class BookPagesComponent {
+  private readonly store = inject(Store);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
 
-  constructor(
-    private readonly route: ActivatedRoute,
-    private readonly router: Router,
-    private readonly bookService: BookService
-  ) {}
-
-  public ngOnInit(): void {
-    this.book$ = this.route.paramMap.pipe(
-      switchMap(params => {
-        const id = Number(params.get('id'));
-        return this.bookService.getBookById(id);
-      })
-    );
-  }
+  protected readonly book = toSignal(
+    this.route.paramMap.pipe(
+      map(params => Number(params.get('id') ?? 0)),
+      switchMap(id => this.store.select(BookSelectors.bookId(id)))
+    )
+  );
 
   protected openPage(bookId: number, pageIndex: number): void {
     this.router.navigate(['/books', bookId, 'read', pageIndex]);

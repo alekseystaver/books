@@ -1,44 +1,33 @@
-import { Component, ElementRef, OnInit, ViewChild, AfterViewInit, DestroyRef } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { AfterViewInit, Component, computed, ElementRef, inject, viewChild } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-book-page',
   templateUrl: './book-page.component.html',
   styleUrls: ['./book-page.component.scss'],
-  standalone: false
+  imports: [CommonModule, RouterModule]
 })
-export class BookPageComponent implements OnInit, AfterViewInit {
+export class BookPageComponent implements AfterViewInit {
+  private readonly canvasRef = viewChild.required<ElementRef<HTMLCanvasElement>>('pageCanvas');
 
-  @ViewChild('pageCanvas') private readonly canvasRef!: ElementRef<HTMLCanvasElement>;
+  private readonly route = inject(ActivatedRoute);
   
-  protected bookId!: number;
-  protected pageIndex: number = 0;
-
-  constructor(
-    private readonly route: ActivatedRoute,
-    private readonly destroyRef: DestroyRef
-  ) {}
-
-  ngOnInit(): void {
-    this.route.paramMap.pipe(
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe(params => {
-      this.pageIndex = Number(params.get('pageIndex'));
-    })
-  }
+  private readonly params = toSignal(this.route.paramMap);
+  
+  protected pageIndex = computed(() => Number(this.params()?.get('pageIndex') ?? 0));
 
   public ngAfterViewInit(): void {
     this.drawPageLines();
   }
 
   private drawPageLines(): void {
-    if (!this.canvasRef || !this.canvasRef.nativeElement) {
-      console.error('Canvas element not found!');
+    if (!this.canvasRef().nativeElement) {
       return;
     }
 
-    const canvas = this.canvasRef.nativeElement;
+    const canvas = this.canvasRef().nativeElement;
     const context = canvas.getContext('2d'); 
 
     if (context) {

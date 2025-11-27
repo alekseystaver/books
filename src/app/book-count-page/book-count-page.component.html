@@ -1,5 +1,3 @@
 <div class="book-count-container">
-    @if (bookCount$ | async; as count) {
-        <h2 class="bookCount-h1">{{ count }} Books</h2>
-    }
+    <h2 class="bookCount-h1">{{ bookCount() }} Books</h2>
 </div>

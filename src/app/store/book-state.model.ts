@@ -12,3 +12,8 @@ export interface Book {
   createdAt: Date;
   pages: number;
 }
+
+export interface BookStateModel {
+    books: Book[];
+    loading: boolean;
+}
