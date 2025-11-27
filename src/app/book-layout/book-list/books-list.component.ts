@@ -30,7 +30,7 @@ export class BooksListComponent{
   ); 
 
   protected filteredBooks = computed(() => {
-    return this.filterBooks(this.books(), this.searchText() ?? '');
+    return this.filterBooks(this.books(), this.searchText());
   });
 
   protected createBook(): void {
@@ -42,14 +42,15 @@ export class BooksListComponent{
   }
 
   protected filterBooks(books: Book[], searchValue: string): Book[] {
-    const normalizedSearchValue = searchValue.trim().toLowerCase();
-
-    if (!normalizedSearchValue) {
+    if (!searchValue) {
       return books;
     }
 
+    const normalizedSearchValue = searchValue.trim().toLowerCase();
+
     return books.filter(book =>
-      book.name.toLowerCase().includes(normalizedSearchValue)
+      book.name.toLowerCase().includes(normalizedSearchValue) ||
+      book.type.toLowerCase().includes(normalizedSearchValue)
     );
   }
 }
